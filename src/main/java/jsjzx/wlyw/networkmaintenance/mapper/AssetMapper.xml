@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jsjzx.wlyw.networkmaintenance.mapper.AssetMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="jsjzx.wlyw.networkmaintenance.entities.Asset">
+        <id column="hostid" property="hostid" />
+        <result column="company" property="company" />
+        <result column="department" property="department" />
+        <result column="devicename" property="devicename" />
+        <result column="hostname" property="hostname" />
+        <result column="type" property="type" />
+        <result column="brand" property="brand" />
+        <result column="model" property="model" />
+        <result column="sn" property="sn" />
+        <result column="ip" property="ip" />
+        <result column="buytime" property="buytime" />
+        <result column="shelftime" property="shelftime" />
+        <result column="guaranty" property="guaranty" />
+        <result column="status" property="status" />
+        <result column="grade" property="grade" />
+        <result column="location" property="location" />
+        <result column="note" property="note" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        hostid, company, department, devicename, hostname, type, brand, model, sn, ip, buytime, shelftime, guaranty, status, grade, location, note
+    </sql>
+
+</mapper>

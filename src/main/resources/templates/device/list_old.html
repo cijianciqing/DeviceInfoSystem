@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Title</title>
+
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/bootstrapTable/bootstrap-table.min.css}" rel="stylesheet">
+
+    <script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+    <script th:src="@{/layer/layer.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/bootstrapTable/bootstrap-table.min.js}"></script>
+    <script th:src="@{/bootstrapTable/locale/bootstrap-table-zh-CN.min.js}"></script>
+    <!--内部联动-->
+
+</head>
+<body>
+<!-- 修改的模态框 -->
+<!--
+<div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">用户修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Edit</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="id" class="form-control" id="id_update_input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">NickName</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="name" class="form-control" id="name_update_static" placeholder="xx" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">UserName</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="username" class="form-control" id="username_update_input" placeholder="xxx">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="password" class="form-control" id="password_update_input" placeholder="xxxx">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="emp_update_btn">更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+<div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel-edit">设备修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Edit</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="hostid" class="form-control" id="id_update_input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Company</label>
+                        <div class="col-sm-10">
+                            <select id="assetCompany-edit" name="assetCompany" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Department</label>
+                        <div class="col-sm-10">
+                            <select id="assetDepartment-edit" name="assetDepartment" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="hostName" id="hostName-edit" value="" placeholder="such as: NetcenterSwitch"
+                                   class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备别名</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="deviceName" id="deviceName-edit" value="" placeholder="such as: 网络信息中心交换机"
+                                   class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">IP</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="password" class="form-control" id="password-edit" placeholder="xxxx">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备类型</label>
+                        <div class="col-sm-10">
+                            <select id="assetType-edit" name="assetType" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">生产厂商</label>
+                        <div class="col-md-10">
+
+                            <select id="assetBrand-edit" name="assetBrand" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备型号</label>
+                        <div class="col-md-10">
+                            <select id="assetModel-edit" name="assetModel" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> 序列号</label>
+                        <div class="col-md-10">
+                            <input type="text" name="snCode" id="snCode-edit" value="" placeholder="S/N code" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> 购买日期</label>
+                        <div class="col-md-10">
+                            <input type="text" name="buyTime" id="buyTime-edit" value="" placeholder="yyyy-MM-dd" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">安装日期</label>
+                        <div class="col-md-10">
+                            <input type="text" name="shelfTime" id="shelfTime-edit" value="" placeholder="yyyy-MM-dd" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">保修截止日期</label>
+                        <div class="col-md-10">
+                            <input type="text" name="gurantyTime" id="gurantyTime-edit" value="" placeholder="yyyy-MM-dd"
+                                   class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备状态</label>
+                        <div class="col-md-10">
+                            <select id="assetStatus-edit" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备级别</label>
+                        <div class="col-md-10">
+                            <select id="assetGrade-edit" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">详细位置</label>
+                        <div class="col-md-10">
+                            <input type="text" name="location" id="location-edit" value="" placeholder="such as ：..." class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">备注</label>
+                        <div class="col-md-10">
+                            <textarea name="comment" id="comment-edit" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="emp_update_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 员工添加的模态框 -->
+<div class="modal fade" id="userAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">设备添加</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Company</label>
+                        <div class="col-sm-10">
+                            <select id="assetCompany" name="assetCompany" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Department</label>
+                        <div class="col-sm-10">
+                            <select id="assetDepartment" name="assetDepartment" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="hostName" id="hostName" value="" placeholder="such as: NetcenterSwitch"
+                                   class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备别名</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="deviceName" id="deviceName" value="" placeholder="such as: 网络信息中心交换机"
+                                   class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">IP</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="password" class="form-control" id="password" placeholder="xxxx">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备类型</label>
+                        <div class="col-sm-10">
+                            <select id="assetType" name="assetType" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">生产厂商</label>
+                        <div class="col-md-10">
+
+                            <select id="assetBrand" name="assetBrand" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备型号</label>
+                        <div class="col-md-10">
+                            <select id="assetModel" name="assetModel" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> 序列号</label>
+                        <div class="col-md-10">
+                            <input type="text" name="snCode" id="snCode" value="" placeholder="S/N code" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> 购买日期</label>
+                        <div class="col-md-10">
+                            <input type="text" name="buyTime" id="buyTime" value="" placeholder="yyyy-MM-dd" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">安装日期</label>
+                        <div class="col-md-10">
+                            <input type="text" name="shelfTime" id="shelfTime" value="" placeholder="yyyy-MM-dd" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">保修截止日期</label>
+                        <div class="col-md-10">
+                            <input type="text" name="gurantyTime" id="gurantyTime" value="" placeholder="yyyy-MM-dd"
+                                   class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备状态</label>
+                        <div class="col-md-10">
+                            <select id="assetStatus" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">设备级别</label>
+                        <div class="col-md-10">
+                            <select id="assetGrade" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">详细位置</label>
+                        <div class="col-md-10">
+                            <input type="text" name="location" id="location" value="" placeholder="such as ：..." class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">备注</label>
+                        <div class="col-md-10">
+                            <textarea name="comment" id="comment" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="emp_save_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toolbar" class="btn-group">
+    <form class="form-inline">
+        <div class="form-group">
+            <label >IP</label>
+            <input type="text" class="form-control" id="soIP" placeholder="xx">
+        </div>
+        <div class="form-group">
+            <label >别名/中文名</label>
+            <input type="text" class="form-control" id="soBieMing" placeholder="xx">
+        </div>
+        <div class="form-group">
+            <label >HostName/English</label>
+            <input type="text" class="form-control" id="soHostName" placeholder="xx">
+        </div>
+        <button type="submit" id="queryBtn" class="btn btn-default">Search</button>
+    </form>
+<div>
+    <button type="button" class="btn btn-default" id="addUserBtn">
+        <i class="glyphicon glyphicon-plus"></i>
+    </button>
+    <button type="button" class="btn btn-default" id="user_deleteAll_btn">
+        <i class="glyphicon glyphicon-trash"></i>
+    </button>
+</div>
+
+
+</div>
+<table id="table">
+</table>
+<script th:inline="javascript">
+    //添加模态框--company change
+    $("#assetCompany").change(function () {
+//        alert("company change");
+        $("#assetDepartment option:not(:first)").remove();
+        var assetComponyName = $(this).val();
+        if (assetComponyName != "") {
+            $.ajax({
+                url: [[@{/company/getDepartments}]],
+                type: "GET",
+                data: {
+                    "assetComponyName": assetComponyName,
+                    "time": new Date
+                },
+                success: function (result) {
+                    if (result.extend.units == 0) {
+                        alert("You got no Model");
+                    } else {
+                        var optionInit = $("<option></option>").append("请选择");
+                        optionInit.appendTo($("#assetDepartment"));
+                        $.each(result.extend.units, function () {
+//                            alert("departments return");
+                            var optionEle = $("<option></option>").append(this.departmentname).attr("value", this.departmentname);
+
+                            optionEle.appendTo($("#assetDepartment"));
+                        })
+                    }
+                }
+            })
+        }
+    })
+    //添加模态框--type change
+    $("#assetType").change(function () {
+        $("#assetBrand option:not(:first)").remove();
+        var assetType = $(this).val();
+
+        if (assetType != "") {
+            $.ajax({
+                url: [[@{/typebrand/getBrands}]],
+            type: "GET",
+                data: {
+                "assetType": assetType,
+                    "time": new Date
+            },
+            success: function (result) {
+                if (result.extend.brands == 0) {
+                    alert("You got no Brand");
+                } else {
+                    var optionInit = $("<option></option>").append("请选择");
+                    optionInit.appendTo($("#assetBrand"));
+                    $.each(result.extend.brands, function () {
+                        var optionEle = $("<option></option>").append(this.brandcn).attr("value-search", this.id).attr("value-search", this.branch);
+                        optionEle.appendTo($("#assetBrand"));
+                    })
+                }
+            }
+        })
+        }
+    })
+    //添加模态框--brand change
+    $("#assetBrand").change(function () {
+//        alert("brand change");
+        $("#assetModel option:not(:first)").remove();
+        var assetBrandId = $(this).attr("value-search");
+
+        if (assetBrandId != "") {
+
+            $.ajax({
+                url: [[@{/brandmodel/getModels}]],
+            type: "GET",
+                data: {
+                "assetBrandId": assetBrandId,
+                    "time": new Date
+            },
+            success: function (result) {
+                if (result.extend.models == 0) {
+                    alert("You got no Model");
+                } else {
+                    // alert("models return");
+                    var optionInit = $("<option></option>").append("请选择");
+                    optionInit.appendTo($("#assetModel"));
+                    $.each(result.extend.models, function () {
+                        var optionEle = $("<option></option>").append(this.model).attr("value", this.model);
+                        optionEle.appendTo($("#assetModel"));
+                    })
+                }
+            }
+        })
+        }
+    })
+
+    //查出所有的部门信息并显示在下拉列表中
+    function getCompany(ele){
+        //清空之前下拉列表的值
+        $(ele).empty();
+        $.ajax({
+            url:[[@{/company/getCompanies}]],
+            type:"GET",
+            success:function(result){
+                var optionInit = $("<option></option>").append("请选择");
+                optionInit.appendTo(ele);
+                $.each(result.extend.companies,function(){
+                    var optionEle = $("<option></option>").append(this.companyname).attr("value",this.companyname);
+                    optionEle.appendTo(ele);
+                });
+            }
+        });
+
+    }
+    function getType(ele){
+        //清空之前下拉列表的值
+        $(ele).empty();
+        $.ajax({
+            url:[[@{/typebrand/getTypes}]],
+        type:"GET",
+            success:function(result){
+                var optionInit = $("<option></option>").append("请选择");
+                optionInit.appendTo(ele);
+                $.each(result.extend.types,function(){
+                var optionEle = $("<option></option>").append(this.type).attr("value",this.type);
+                optionEle.appendTo(ele);
+            });
+        }
+    });
+
+    }
+    function getStatus(ele){
+        //清空之前下拉列表的值
+        $(ele).empty();
+        $.ajax({
+            url:[[@{/status/getStatuses}]],
+        type:"GET",
+            success:function(result){
+            var optionInit = $("<option></option>").append("请选择");
+            optionInit.appendTo(ele);
+            $.each(result.extend.statuses,function(){
+                var optionEle = $("<option></option>").append(this.statusname).attr("value",this.statusname);
+                optionEle.appendTo(ele);
+            });
+        }
+    });
+
+    }
+    function getGrade(ele){
+        //清空之前下拉列表的值
+        $(ele).empty();
+        $.ajax({
+            url:[[@{/grade/getGrades}]],
+        type:"GET",
+            success:function(result){
+            var optionInit = $("<option></option>").append("请选择");
+            optionInit.appendTo(ele);
+                $.each(result.extend.grades,function(){
+                var optionEle = $("<option></option>").append(this.gradename).attr("value",this.gradename);
+                optionEle.appendTo(ele);
+            });
+        }
+    });
+
+    }
+
+
+
+    //生成BootStrapTable
+    $(function () {
+        var rurl =[[@{/device/getDevices}]];
+        $("#table").bootstrapTable({
+            url: rurl,//请求的URL
+            cache: false,//是否使用缓存
+          //search:true,//是否显示表格搜索
+            toolbar:"#toolbar",//工具栏
+            striped: true,//行间隔色
+            pagination: true,//分页
+            pageList: [10,20,30],//每页行数
+            pageSize:10,//每页的行数
+            pageNumber: 1,//初始化第一页，默认第一页
+            showToggle: true,//详细视图和列表视图的切换
+            sortable:true,//启用排序
+            showRefresh:true,//刷新
+            showColumns:true,//显示所有列
+            sortName:'hostid',//排序的列
+            sortOrder:'desc',//排序方式
+            sidePagination: "server",
+            queryParams: function (params) {
+                var temp = {
+                    pageSize: params.limit,
+                    pageNumber: (params.offset / params.limit) + 1,
+                    sortName: params.sort,
+                    soIP:$("#soIP").val(),
+                    soBieMing:$("#soBieMing").val(),
+                    soHostName:$("#soHostName").val(),
+                    sortOrder: params.order
+                };
+                return temp;
+            },
+            columns:[
+                {
+                    checkbox:true
+                },
+                {
+                    field:'hostname',
+                    title:'Host Name',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    switchable:false,//右上角的column不显示此列
+                    visible:true
+                },
+                {
+                    field:'hostid',
+                    title:'Host ID',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'devicename',
+                    title:'Device Name',
+                    align:'center',
+                    sortable:'true',
+                    valign:'middle'
+//                    visible:false
+                },
+                {
+                    field:'ip',
+                    title:'IP Address',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:true
+                },
+                {
+                    field:'company',
+                    title:'Company Name',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                }, {
+                    field:'department',
+                    title:'DepartMent Name',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'type',
+                    title:'Type',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'brand',
+                    title:'Brand',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'model',
+                    title:'Model',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'sn',
+                    title:'SN Code',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'buytime',
+                    title:'Buy Time',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false,
+                    formatter: function (value, row, index) {
+                        return changeDateFormat(value)
+                    }
+                },
+                {
+                    field:'shelftime',
+                    title:'Shelf Time',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'guranty',
+                    title:'Guranty Time',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'status',
+                    title:'Status',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'grade',
+                    title:'Grade',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'location',
+                    title:'Location',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'action',
+                    title:'Action',
+                    formatter:actionFormatter
+                }
+            ],
+        /*    detailView:true,//显示父子表
+            //显示隐藏信息
+            onExpandRow: function (index, row, $detail) {
+                $detail.hide().html('&emsp;&emsp;&emsp;Company : '+row.company+'&emsp;&emsp;&emsp;Department: '+row.department+'<br/>'
+                    +'&emsp;&emsp;&emsp;Type: '+row.type+'&emsp;&emsp;&emsp;Brand: '+row.brand+'&emsp;&emsp;&emsp;Model: '+row.model+'<br/>'
+                    +'&emsp;&emsp;&emsp;Status: '+row.status+'&emsp;&emsp;&emsp;Grade: '+row.grade+'<br/>'
+                    +'&emsp;&emsp;&emsp;DetailLocation: '+row.location).fadeIn('slow')
+            },
+            onCollapseRow: function (index, row, $detail) {
+                $detail.clone().insertAfter($detail).fadeOut('slow', function () {
+                    $(this).remove()
+                })
+            },*/
+            onLoadSuccess: function(){  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function(){  //加载失败时执行
+                console.info("加载数据失败");
+            }
+
+
+        })
+
+        function changeDateFormat(cellval) {
+            var dateVal = cellval + "";
+            if (cellval != null) {
+                var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+                var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+            }
+        }
+
+
+        var btnTd = editBtn.append(" ").append(delBtn);
+        function actionFormatter(value, row, index) {
+            return [
+                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="like" href="user/selectOne/'+row.hostid+'"title="Like">',
+                '<i class="glyphicon glyphicon-heart"></i>',
+                '</a>&nbsp;&nbsp;&nbsp;&nbsp;',
+                '<a class="edit ml10 edit_btn"  edit-id="'+row.hostid+'"title="Edit">',
+                '<i class="glyphicon glyphicon-edit"></i>',
+                '</a>&nbsp;&nbsp;&nbsp;&nbsp;',
+                '<a class="remove ml10 delete_btn" del-id="'+row.hostid+'"title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+                ].join('');
+        }
+
+    })
+
+
+    //刷新BootstrapTable
+    $("#queryBtn").click(function () {
+        $("#table").bootstrapTable('refresh');
+        return false;
+    })
+
+    //清空内容
+    function reset_form(ele){
+        $(ele)[0].reset();
+        //清空表单样式
+//        $(ele).find("*").removeClass("has-error has-success");
+//        $(ele).find(".help-block").text("");
+    }
+
+    //打开添加用户模态框
+    $("#addUserBtn").click(function(){
+//        alert("aaaa");
+        //清除表单数据（表单完整重置（表单的数据，表单的样式））
+        reset_form("#userAddModal form");
+        //s$("")[0].reset();
+        //发送ajax请求，查出部门信息，显示在下拉列表中
+//        alert(("#userAddModal select"));
+        getCompany("#userAddModal #assetCompany");
+        getType("#userAddModal #assetType");
+        getStatus("#userAddModal #assetStatus");
+        getGrade("#userAddModal #assetGrade");
+        //弹出模态框
+        $("#userAddModal").modal({
+            backdrop:"static"
+        });
+
+    });
+
+    //点击保存，保存员工。
+    $("#emp_save_btn").click(function(){
+//        alert($("#userAddModal form").serialize());
+        $("#userAddModal  option:selected").each(
+            function(){
+                if($(this).text()==("请选择")){
+                    $(this).text("");
+                }
+        });
+          var departmentValue = $("#userAddModal #assetDepartment option:selected").text();
+//          alert("ss"+$("#userAddModal #assetDepartment option:selected").text())
+           var brandVal = $("#userAddModal #assetBrand option:selected").text();
+
+        //2、发送ajax请求保存员工
+        var loadingIndex = null;
+        $.ajax({
+            url:[[@{/device/add}]],
+            type:"POST",
+            data:
+        {
+            "company": $("#userAddModal #assetCompany").val(),
+            "department": departmentValue,
+            "devicename": $("#userAddModal #deviceName").val(),
+            "hostname": $("#userAddModal #hostName").val(),
+            "type": $("#userAddModal #assetType").val(),
+            //Caution the $("#assetBrand).val() is the brandId
+            "brand": brandVal,
+            "model": $("#userAddModal #assetModel").val(),
+            "sn": $("#userAddModal #snCode").val(),
+            "ip": $("#userAddModal #ipAddress").val(),
+            "buytime": $("#userAddModal #buyTime").val(),
+            "shelftime": $("#userAddModal #shelfTime").val(),
+            "guaranty": $("#userAddModal #gurantyTime").val(),
+            "status": $("#userAddModal #assetStatus").val(),
+            "grade": $("#userAddModal #assetGrade").val(),
+            "location": $("#userAddModal #location").val(),
+            "note": $("#userAddModal #comment").val(),
+            "time": new Date
+        }
+    ,
+            beforeSend : function(){
+                loadingIndex = layer.msg('处理中', {icon: 16});
+            },
+            success:function(result){
+                //alert(result.msg);
+                if(result.code == 100){
+                    //员工保存成功；
+                    //1、关闭模态框
+                    $("#userAddModal").modal('hide');
+                    //刷新页面
+                    location.reload(true);
+                }else{
+                    //显示失败信息
+                    //console.log(result);
+                    //有哪个字段的错误信息就显示哪个字段的；
+                    if (result.extend.errorFields.hostname) {
+                        layer.msg("HostName： "+result.extend.errorFields.hostname, {time:2000, icon:5, shift:6}, function(){});
+                    };
+                    if (result.extend.errorFields.buytime) {
+                        layer.msg("BuyTime： "+result.extend.errorFields.buytime, {time:2000, icon:5, shift:6}, function(){});
+                    };
+                }
+            }
+        });
+    });
+
+    //弹出编辑用户模态框
+    $(document).on("click",".edit_btn",function(){
+//        alert("edit");
+        reset_form("#userUpdateModal form");
+        //1、查出部门信息，并显示部门列表
+//        getDepts("#empUpdateModal select");
+        getCompany("#userUpdateModal #assetCompany-edit");
+        getType("#userUpdateModal #assetType-edit");
+        getStatus("#userUpdateModal #assetStatus-edit");
+        getGrade("#userUpdateModal #assetGrade-edit");
+        //2、查出员工信息，显示员工信息
+        getEmp($(this).attr("edit-id"));
+
+        //3、把员工的id传递给模态框的更新按钮
+//        $("#emp_update_btn").attr("edit-id",$(this).attr("edit-id"));
+        $("#userUpdateModal").modal({
+            backdrop:"static"
+        });
+    });
+    //将data转换为固定格式:YYYY-MM-DD
+    function changeDateFormat02(cellval) {
+        var dateVal = cellval + "";
+        if (cellval != null) {
+            var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+            return date.getFullYear() + "-" + month + "-" + currentDate ;
+        }
+    }
+    //更新user前，查询user信息
+    function getEmp(id){
+        $.ajax({
+            url:[[@{/device/getOne/}]]+id,
+            type:"GET",
+            success:function(result){
+                var device = result.extend.device;
+                var buytimeT = changeDateFormat02(device.buytime);
+                $("#userUpdateModal #assetCompany-edit").val(device.company);
+                $("#userUpdateModal #assetDepartment-edit").val(device.department);
+                $("#userUpdateModal #deviceName-edit").val(device.devicename);
+                $("#userUpdateModal #buyTime-edit").val(buytimeT);
+                $("#userUpdateModal #id_update_input").val(device.hostid);
+            }
+        });
+    }
+
+    //点击更新，更新员工信息
+    $("#emp_update_btn").click(function(){
+
+        var loadingIndex = null;
+        $.ajax({
+            url:[[@{/user/edit}]],
+            type:"put",
+            data:$("#userUpdateModal form").serialize(),
+            beforeSend : function(){
+            loadingIndex = layer.msg('处理中', {icon: 16});
+        },
+            success:function(result){
+                if(result.code == 100){
+                    //员工保存成功；
+                    //1、关闭模态框
+                    $("#userUpdateModal").modal('hide');
+                    //刷新页面
+                    location.reload(true);
+                }else{
+                    //显示失败信息
+                    //console.log(result);
+                    //有哪个字段的错误信息就显示哪个字段的；
+                    if (result.extend.errorFields.username) {
+                        layer.msg("用户名不能为空，请重新输入", {time:2000, icon:5, shift:6}, function(){});
+                    };
+                    if (result.extend.errorFields.password) {
+                        layer.msg("密码不能为空，请重新输入", {time:2000, icon:5, shift:6}, function(){});
+                    };
+                }
+            }
+        });
+    });
+
+
+    //单个删除
+    $(document).on("click",".delete_btn",function(){
+        //1、弹出是否确认删除对话框
+        var empName = $(this).parents("tr").find("td:eq(2)").text();
+        var empId = $(this).attr("del-id");
+        //alert($(this).parents("tr").find("td:eq(1)").text());
+        if(confirm("确认删除【"+empName+"】吗？")){
+            //确认，发送ajax请求删除即可
+            var loadingIndex = null;
+            $.ajax({
+                url:[[@{/user/delete/}]]+empId,
+                type:"DELETE",
+                beforeSend : function(){
+                loadingIndex = layer.msg('处理中', {icon: 16});
+                },
+                success:function(result){
+                    alert(result.msg);
+                    location.reload(true);
+                }
+            });
+        }
+    });
+
+    $("#user_deleteAll_btn").click(function () {
+        var rows = $("#table").bootstrapTable('getSelections');
+        if (rows.length== 0) {
+            alert("请先选择要删除的记录!");
+            return;
+        }
+        var empNames = "";
+        var del_idstr = "";
+        for (var i = 0; i < rows.length; i++) {
+            del_idstr += rows[i]['id'] + "-";
+            empNames += rows[i]['name'] + ",";
+        }
+        //去除empNames多余的,
+        empNames = empNames.substring(0, empNames.length-1);
+        //去除删除的id多余的-
+        del_idstr = del_idstr.substring(0, del_idstr.length-1);
+        if(confirm("确认删除【"+empNames+"】吗？")){
+            //发送ajax请求删除
+            var loadingIndex = null;
+            $.ajax({
+                url:[[@{/user/delete/}]]+del_idstr,
+                type:"DELETE",
+                    beforeSend : function(){
+                    loadingIndex = layer.msg('处理中', {icon: 16});
+                },
+                    success:function(result){
+                    alert(result.msg);
+                    location.reload(true);
+                }
+            });
+        }
+    })
+
+
+
+
+
+</script>
+</body>
+</html>

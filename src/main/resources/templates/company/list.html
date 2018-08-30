@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Title</title>
+
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/bootstrapTable/bootstrap-table.min.css}" rel="stylesheet">
+
+    <script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+    <script th:src="@{/layer/layer.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/bootstrapTable/bootstrap-table.min.js}"></script>
+    <script th:src="@{/bootstrapTable/locale/bootstrap-table-zh-CN.min.js}"></script>
+    <!--内部联动-->
+
+</head>
+<body>
+
+<!--更改模态框-->
+<div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel-edit">公信息司修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Edit</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="id" class="form-control" id="id_update_input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Company</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="companyname-edit" name="companyname" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Department</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="departmentname-edit" name="departmentname" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">公司简称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="companynameshort" id="companynameshort-edit" class="form-control">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="emp_update_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加的模态框 -->
+<div class="modal fade" id="userAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">公司新增</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Company</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="companyname" name="companyname" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Department</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="departmentname" name="departmentname" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">公司简称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="companynameshort" id="companynameshort" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="emp_save_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--BootstrapTable自定义工具栏-->
+<div id="toolbar" class="btn-group">
+<div>
+    <button type="button" class="btn btn-default" id="addUserBtn">
+        <i class="glyphicon glyphicon-plus"></i>
+    </button>
+    <button type="button" class="btn btn-default" id="user_deleteAll_btn">
+        <i class="glyphicon glyphicon-trash"></i>
+    </button>
+</div>
+</div>
+
+<table id="table">
+</table>
+
+
+<script th:inline="javascript">
+
+
+
+    //生成BootStrapTable
+    $(function () {
+        var rurl =[[@{/company/getBTCompanies}]];
+        $("#table").bootstrapTable({
+            url: rurl,//请求的URL
+            cache: false,//是否使用缓存
+            search:true,//是否显示表格搜索
+            toolbar:"#toolbar",//工具栏
+            striped: true,//行间隔色
+            pagination: true,//分页
+            pageList: [10,20,30],//每页行数
+            pageSize:10,//每页的行数
+            pageNumber: 1,//初始化第一页，默认第一页
+            showToggle: true,//详细视图和列表视图的切换
+            sortable:true,//启用排序
+            showRefresh:true,//刷新
+            showColumns:true,//显示所有列
+            sortName:'companyname',//排序的列
+            sortOrder:'desc',//排序方式
+            sidePagination: "server",
+            queryParams: function (params) {
+                var temp = {
+                    pageSize: params.limit,
+                    pageNumber: (params.offset / params.limit) + 1,
+                    sortName: params.sort,
+                    searchInfo:params.search,
+                    sortOrder: params.order
+                };
+                return temp;
+            },
+            columns:[
+                {
+                    checkbox:true
+                },
+                {
+                    field:'companyname',
+                    title:'Company Name',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    switchable:false,//右上角的column不显示此列
+                    visible:true
+                },
+                {
+                    field:'id',
+                    title:'Company ID',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:false
+                },
+                {
+                    field:'companynameshort',
+                    title:'CompanyShortName',
+                    align:'center',
+                    sortable:'true',
+                    valign:'middle'
+//                    visible:false
+                },
+                {
+                    field:'departmentname',
+                    title:'Department Name',
+                    align:'center',
+                    valign:'middle',
+                    sortable:'true',
+                    visible:true
+                },
+                {
+                    field:'action',
+                    title:'Action',
+                    formatter:actionFormatter
+                }
+            ],
+            onLoadSuccess: function(){  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function(){  //加载失败时执行
+                console.info("加载数据失败");
+            }
+
+
+        })
+        function actionFormatter(value, row, index) {
+            return [
+//                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="like" href="user/selectOne/'+row.hostid+'"title="Like">',
+//                '<i class="glyphicon glyphicon-heart"></i>',
+//                '</a>&nbsp;&nbsp;&nbsp;&nbsp;',
+
+                '&nbsp;&nbsp;&nbsp;&nbsp;<a class="edit ml10 edit_btn"  edit-id="'+row.id+'"title="Edit">',
+                '<i class="glyphicon glyphicon-edit"></i>',
+                '</a>&nbsp;&nbsp;&nbsp;&nbsp;',
+                '<a class="remove ml10 delete_btn" del-id="'+row.id+'"title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+                ].join('');
+        }
+
+    })
+    //刷新BootstrapTable，查询
+    $("#queryBtn").click(function () {
+        $("#table").bootstrapTable('refresh');
+        return false;
+    })
+
+
+    //清空内容
+    function reset_form(ele){
+        $(ele)[0].reset();
+        //清空表单样式
+//        $(ele).find("*").removeClass("has-error has-success");
+//        $(ele).find(".help-block").text("");
+    }
+
+
+    //打开添加用户模态框
+    $("#addUserBtn").click(function(){
+        //弹出模态框
+        $("#userAddModal").modal({
+            backdrop:"static"
+        });
+
+    });
+    //点击保存，保存员工。
+    $("#emp_save_btn").click(function(){
+
+        var loadingIndex = null;
+        $.ajax({
+            url:[[@{/company/add}]],
+            type:"POST",
+            data:$("#userAddModal form").serialize(),
+            beforeSend : function(){
+                loadingIndex = layer.msg('处理中', {icon: 16});
+            },
+            success:function(result){
+                //alert(result.msg);
+                if(result.code == 100){
+                    //员工保存成功；
+                    //1、关闭模态框
+                    $("#userAddModal").modal('hide');
+                    //刷新页面
+                    location.reload(true);
+                }else{
+                    //显示失败信息
+                    //console.log(result);
+                    //有哪个字段的错误信息就显示哪个字段的；
+                    if (result.extend.errorFields.companyname) {
+                        layer.msg("CompanyName： "+result.extend.errorFields.companyname, {time:2000, icon:5, shift:6}, function(){});
+                    };
+
+                }
+            }
+        });
+    });
+
+
+    //弹出编辑用户模态框
+    $(document).on("click",".edit_btn",function(){
+        reset_form("#userUpdateModal form");
+
+        getEmp($(this).attr("edit-id"));
+
+        $("#userUpdateModal").modal({
+            backdrop:"static"
+        });
+    });
+    //更新user前，查询user信息，以及相关的部门、设备品牌、设备型号信息
+    function getEmp(id){
+        $.ajax({
+            url:[[@{/company/getOne/}]]+id,
+            type:"GET",
+            success:function(result){
+                var company = result.extend.company;
+                $("#userUpdateModal #id_update_input").val(company.id);
+                $("#userUpdateModal #companyname-edit").val(company.companyname);
+                $("#userUpdateModal #companynameshort-edit").val(company.companynameshort);
+                $("#userUpdateModal #departmentname-edit").val(company.departmentname);
+            }
+        });
+    }
+    //点击更新，更新员工信息
+    $("#emp_update_btn").click(function(){
+
+        var loadingIndex = null;
+        $.ajax({
+            url:[[@{/company/edit}]],
+            type:"put",
+            data:$("#userUpdateModal form").serialize(),
+            beforeSend : function(){
+            loadingIndex = layer.msg('处理中', {icon: 16});
+        },
+            success:function(result){
+                if(result.code == 100){
+                    //员工保存成功；
+                    //1、关闭模态框
+                    $("#userUpdateModal").modal('hide');
+                    //刷新页面
+                    location.reload(true);
+                }else{
+
+                    if (result.extend.errorFields.companyname) {
+                        layer.msg("CompanyName： "+result.extend.errorFields.companyname, {time:2000, icon:5, shift:6}, function(){});
+                    };
+
+                }
+            }
+        });
+    });
+
+
+    //单个删除
+    $(document).on("click",".delete_btn",function(){
+        //1、弹出是否确认删除对话框
+        var empName = $(this).parents("tr").find("td:eq(1)").text();
+        var empId = $(this).attr("del-id");
+        if(confirm("确认删除【"+empName+"】吗？")){
+            //确认，发送ajax请求删除即可
+            var loadingIndex = null;
+            $.ajax({
+                url:[[@{/company/delete/}]]+empId,
+                type:"DELETE",
+                beforeSend : function(){
+                loadingIndex = layer.msg('处理中', {icon: 16});
+                },
+                success:function(result){
+                    location.reload(true);
+                }
+            });
+        }
+    });
+    //批量删除
+    $("#user_deleteAll_btn").click(function () {
+//       alert("sss");
+        var rows = $("#table").bootstrapTable('getSelections');
+        if (rows.length== 0) {
+            alert("请先选择要删除的记录!");
+            return;
+        }
+        var empNames = "";
+        var del_idstr = "";
+        for (var i = 0; i < rows.length; i++) {
+            del_idstr += rows[i]['id'] + "-";
+            empNames += rows[i]['companyname'] + ",";
+        }
+        //去除empNames多余的,
+        empNames = empNames.substring(0, empNames.length-1);
+        //去除删除的id多余的-
+        del_idstr = del_idstr.substring(0, del_idstr.length-1);
+        if(confirm("确认删除【"+empNames+"】吗？")){
+            //发送ajax请求删除
+            var loadingIndex = null;
+            $.ajax({
+                url:[[@{/company/delete/}]]+del_idstr,
+                type:"DELETE",
+                    beforeSend : function(){
+                    loadingIndex = layer.msg('处理中', {icon: 16});
+                },
+                    success:function(result){
+                    location.reload(true);
+                }
+            });
+        }
+    })
+
+
+</script>
+</body>
+</html>

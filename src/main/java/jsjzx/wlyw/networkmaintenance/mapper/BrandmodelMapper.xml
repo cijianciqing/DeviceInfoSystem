@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jsjzx.wlyw.networkmaintenance.mapper.BrandmodelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="jsjzx.wlyw.networkmaintenance.entities.Brandmodel">
+        <id column="id" property="id" />
+        <result column="model" property="model" />
+        <result column="typebrandid" property="typebrandid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, model, typebrandid
+    </sql>
+
+</mapper>
