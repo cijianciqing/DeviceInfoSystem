@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jsjzx.wlyw.networkmaintenance.mapper.MyModelMapper">
+
+
+
+    <resultMap type="jsjzx.wlyw.networkmaintenance.entities.MyModel" id="MyDifEmp2">
+        <id column="id" property="id"/>
+        <result column="model" property="model"/>
+        <association property="typebrand" javaType="jsjzx.wlyw.networkmaintenance.entities.Typebrand">
+            <id column="tid" property="id"/>
+            <result column="type" property="type"/>
+            <result column="brandcn" property="brandcn"/>
+            <result column="branden" property="branden"/>
+        </association>
+    </resultMap>
+
+    <select id="getAllMyModels" resultMap="MyDifEmp2">
+       SELECT b.id id,b.model model,t.type type,t.brandcn brandcn,t.branden branden,t.id tid
+       FROM typebrand t,brandmodel b
+       WHERE b.typebrandid=t.id
+    </select>
+
+</mapper>

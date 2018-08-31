@@ -26,6 +26,8 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/company/list").setViewName("company/list");
         //显示厂家设备列表
         registry.addViewController("/tAm/list").setViewName("tAm/list");
+        //显示设备具体型号
+        registry.addViewController("/dmodel/list").setViewName("dmodel/list");
 
     }
 

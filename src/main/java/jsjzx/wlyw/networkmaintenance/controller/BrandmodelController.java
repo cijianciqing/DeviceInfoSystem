@@ -38,5 +38,7 @@ public class BrandmodelController {
         List<Brandmodel> brandmodels = brandmodelService.selectList(wrapper);
         return Msg.success().add("models",brandmodels);
     }
+
+
 }
 
