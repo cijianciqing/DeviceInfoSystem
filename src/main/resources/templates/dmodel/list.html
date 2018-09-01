@@ -26,7 +26,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel-edit">分类及品牌修改</h4>
+                <h4 class="modal-title" id="myModalLabel-edit">型号更新</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -39,19 +39,19 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">分类</label>
                         <div class="col-sm-10">
-                            <input type="text" id="type-edit" name="type" class="form-control">
+                            <select type="text"   id="type-edit" name="typebrand.type" class="form-control"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">品牌中文名称</label>
                         <div class="col-sm-10">
-                            <input type="text" id="brandcn-edit" name="brandcn" class="form-control">
+                            <select type="text" id="brandcn-edit" name="typebrand.brandcn" class="form-control"></select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 control-label">品牌英文名称</label>
+                        <label class="col-md-2 control-label">型号</label>
                         <div class="col-sm-10">
-                            <input type="text" name="branden" id="branden-edit" class="form-control">
+                            <input type="text"  id="model-edit" name="model" class="form-control">
                         </div>
                     </div>
 
@@ -71,26 +71,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">分类及品牌新增</h4>
+                <h4 class="modal-title" id="myModalLabel">新增设备型号</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">分类</label>
                         <div class="col-sm-10">
-                            <input type="text" id="type" name="type" class="form-control">
+                            <select type="text" id="type" name="typebrand.type" class="form-control"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">品牌中文名称</label>
                         <div class="col-sm-10">
-                            <input type="text" id="brandcn" name="brandcn" class="form-control">
+                            <select type="text" id="brandcn" name="typebrand.brandcn" class="form-control"></select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 control-label">品牌英文名称</label>
+                        <label class="col-md-2 control-label">型号</label>
                         <div class="col-sm-10">
-                            <input type="text" name="branden" id="branden" class="form-control">
+                            <input type="text" name="model" id="model" class="form-control">
                         </div>
                     </div>
                 </form>
@@ -126,7 +126,7 @@
 
     //生成BootStrapTable
     $(function () {
-        var rurl =[[@{/typebrand/getBTTypes}]];
+        var rurl =[[@{/myModel/getMyModels}]];
         $("#table").bootstrapTable({
             url: rurl,//请求的URL
             cache: false,//是否使用缓存
@@ -141,7 +141,7 @@
             sortable:true,//启用排序
             showRefresh:true,//刷新
             showColumns:true,//显示所有列
-            sortName:'type',//排序的列
+            sortName:'t.type',//排序的列
             sortOrder:'desc',//排序方式
             sidePagination: "server",
             queryParams: function (params) {
@@ -159,8 +159,8 @@
                     checkbox:true
                 },
                 {
-                    field:'brandcn',
-                    title:'Brand CName',
+                    field:'model',
+                    title:'Model Name',
                     align:'center',
                     valign:'middle',
                     sortable:'true',
@@ -176,7 +176,7 @@
                     visible:false
                 },
                 {
-                    field:'type',
+                    field:'typebrand.type',
                     title:'Type',
                     align:'center',
                     sortable:'true',
@@ -184,8 +184,8 @@
 //                    visible:false
                 },
                 {
-                    field:'branden',
-                    title:'Brand EName',
+                    field:'typebrand.brandcn',
+                    title:'Brand Name',
                     align:'center',
                     valign:'middle',
                     sortable:'true',
@@ -237,21 +237,105 @@
 //        $(ele).find(".help-block").text("");
     }
 
+    function getType(ele){
+        //清空之前下拉列表的值
+        $(ele).empty();
+        $.ajax({
+            url:[[@{/typebrand/getTypes}]],
+        type:"GET",
+            success:function(result){
+            var optionInit = $("<option></option>").append("请选择");
+            optionInit.appendTo(ele);
+            $.each(result.extend.types,function(){
+                var optionEle = $("<option></option>").append(this.type).attr("value",this.type);
+                optionEle.appendTo(ele);
+            });
+        }
+    });
+
+    }
+
+    //添加模态框--type change
+    $("#userAddModal #type").change(function () {
+        $("#userAddModal #brandcn option").remove();
+        var assetType = $(this).val();
+
+        if (assetType != "") {
+            $.ajax({
+                url: [[@{/typebrand/getBrands}]],
+            type: "GET",
+                data: {
+                "assetType": assetType,
+                    "time": new Date
+            },
+            success: function (result) {
+                if (result.extend.brands == 0) {
+                    alert("You got no Brand");
+                } else {
+                    if($("#userAddModal #brandcn option:first").text()!="请选择"){
+                        var optionInit = $("<option></option>").append("请选择");
+                        optionInit.appendTo($("#brandcn"));
+                    }
+                    $.each(result.extend.brands, function () {
+                        var optionEle = $("<option></option>").append(this.brandcn).attr({value:this.brandcn, value02:this.id});
+                        optionEle.appendTo($("#brandcn"));
+                    })
+                }
+            }
+        })
+        }
+    })
+
+
+    //更改模态框--type change
+    $("#userUpdateModal #type-edit").change(function () {
+        $("#brandcn-edit option").remove();
+        var assetType = $(this).val();
+
+        if (assetType != "") {
+            $.ajax({
+                url: [[@{/typebrand/getBrands}]],
+            type: "GET",
+                data: {
+                "assetType": assetType,
+                    "time": new Date
+            },
+            success: function (result) {
+                if (result.extend.brands == 0) {
+                    alert("You got no Brand");
+                } else {
+                    var optionInit = $("<option></option>").append("请选择");
+                    optionInit.appendTo($("#brandcn-edit"));
+                    $.each(result.extend.brands, function () {
+                        var optionEle = $("<option></option>").append(this.brandcn).attr({value:this.brandcn, value02:this.id});
+                        optionEle.appendTo($("#brandcn-edit"));
+                    })
+                }
+            }
+        })
+        }
+    })
+
 
     //打开添加用户模态框
     $("#addUserBtn").click(function(){
+
+        reset_form("#userAddModal form");
+
+        getType("#userAddModal #type");
         //弹出模态框
         $("#userAddModal").modal({
             backdrop:"static"
         });
 
     });
+
     //点击保存，保存员工。
     $("#emp_save_btn").click(function(){
 
         var loadingIndex = null;
         $.ajax({
-            url:[[@{/typebrand/add}]],
+            url:[[@{/myModel/add}]],
             type:"POST",
             data:$("#userAddModal form").serialize(),
             beforeSend : function(){
@@ -272,6 +356,9 @@
                     if (result.extend.errorFields.type) {
                         layer.msg("Type： "+result.extend.errorFields.type, {time:2000, icon:5, shift:6}, function(){});
                     };
+                    if (result.extend.errorFields.brand) {
+                        layer.msg("Type： "+result.extend.errorFields.type, {time:2000, icon:5, shift:6}, function(){});
+                    };
 
                 }
             }
@@ -283,6 +370,8 @@
     $(document).on("click",".edit_btn",function(){
         reset_form("#userUpdateModal form");
 
+        getType("#userUpdateModal #type-edit");
+
         getEmp($(this).attr("edit-id"));
 
         $("#userUpdateModal").modal({
@@ -292,14 +381,23 @@
     //更新user前，查询user信息，以及相关的部门、设备品牌、设备型号信息
     function getEmp(id){
         $.ajax({
-            url:[[@{/typebrand/getOne/}]]+id,
+            url:[[@{/myModel/getOne/}]]+id,
             type:"GET",
             success:function(result){
-                var brand = result.extend.brand;
-                $("#userUpdateModal #id_update_input").val(brand.id);
-                $("#userUpdateModal #type-edit").val(brand.type);
-                $("#userUpdateModal #brandcn-edit").val(brand.brandcn);
-                $("#userUpdateModal #branden-edit").val(brand.branden);
+
+
+
+            $.each(result.extend.brands,function(){
+                var optionEle = $("<option></option>").append(this.brandcn).attr({value:this.brandcn});
+                optionEle.appendTo($("#userUpdateModal #brandcn-edit"));
+            });
+
+            var mymodel = result.extend.mymodel;
+
+                $("#userUpdateModal #id_update_input").val(mymodel.id);
+                $("#userUpdateModal #model-edit").val(mymodel.model);
+                $("#userUpdateModal #type-edit").val(mymodel.typebrand.type);
+                $("#userUpdateModal #brandcn-edit").val(mymodel.typebrand.brandcn);
             }
         });
     }
@@ -308,7 +406,7 @@
 
         var loadingIndex = null;
         $.ajax({
-            url:[[@{/typebrand/edit}]],
+            url:[[@{/myModel/edit}]],
             type:"put",
             data:$("#userUpdateModal form").serialize(),
             beforeSend : function(){
@@ -342,7 +440,7 @@
             //确认，发送ajax请求删除即可
             var loadingIndex = null;
             $.ajax({
-                url:[[@{/typebrand/delete/}]]+empId,
+                url:[[@{/myModel/delete/}]]+empId,
                 type:"DELETE",
                 beforeSend : function(){
                 loadingIndex = layer.msg('处理中', {icon: 16});
@@ -365,7 +463,7 @@
         var del_idstr = "";
         for (var i = 0; i < rows.length; i++) {
             del_idstr += rows[i]['id'] + "-";
-            empNames += rows[i]['brandcn'] + ",";
+            empNames += rows[i]['typebrand.brandcn'] + ",";
         }
         //去除empNames多余的,
         empNames = empNames.substring(0, empNames.length-1);
@@ -375,7 +473,7 @@
             //发送ajax请求删除
             var loadingIndex = null;
             $.ajax({
-                url:[[@{/typebrand/delete/}]]+del_idstr,
+                url:[[@{/myModel/delete/}]]+del_idstr,
                 type:"DELETE",
                     beforeSend : function(){
                     loadingIndex = layer.msg('处理中', {icon: 16});

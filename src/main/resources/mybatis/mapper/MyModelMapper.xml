@@ -3,7 +3,6 @@
 <mapper namespace="jsjzx.wlyw.networkmaintenance.mapper.MyModelMapper">
 
 
-
     <resultMap type="jsjzx.wlyw.networkmaintenance.entities.MyModel" id="MyDifEmp2">
         <id column="id" property="id"/>
         <result column="model" property="model"/>
@@ -21,4 +20,22 @@
        WHERE b.typebrandid=t.id
     </select>
 
+    <select id="selectMyModelPage" resultMap="MyDifEmp2">
+        SELECT b.id id,b.model model,t.type type,t.brandcn brandcn,t.branden branden,t.id tid
+        FROM typebrand t,brandmodel b
+        <where>
+            And b.typebrandid=t.id
+            ${ew.sqlSegment}
+          </where>
+    </select>
+
+
+    <select id="selectMyCount" resultType="Integer">
+        SELECT count(*)
+        FROM typebrand t,brandmodel b
+        <where>
+            And b.typebrandid=t.id
+            ${ew.sqlSegment}
+        </where>
+    </select>
 </mapper>
